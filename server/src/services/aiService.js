@@ -298,47 +298,67 @@ Description: ${description}
 
 Return ONLY a valid JSON object with keys: category, category_confidence, priority, priority_reason, draftResponse.`;
 
-  const model = modelName || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
+  const modelsToTry = [
+    modelName || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b',
+    'openai/gpt-oss-120b',
+    'openai/gpt-oss-20b'
+  ];
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3
-    })
-  });
+  let lastError = null;
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Groq API responded with status ${res.status}: ${errorText}`);
+  for (const model of modelsToTry) {
+    try {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          response_format: { type: 'json_object' },
+          temperature: 0.3
+        })
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Groq model ${model} status ${res.status}: ${errorText}`);
+      }
+
+      const data = await res.json();
+      const rawContent = data.choices[0]?.message?.content;
+      if (!rawContent) {
+        throw new Error(`Groq model ${model} returned empty content`);
+      }
+
+      const parsed = JSON.parse(rawContent.trim());
+
+      return {
+        category: normalizeCategory(parsed.category),
+        category_confidence: typeof parsed.category_confidence === 'number' ? parsed.category_confidence : 0.95,
+        priority: normalizePriority(parsed.priority),
+        priority_reason: parsed.priority_reason || 'AI assessed priority based on ticket content',
+        draftResponse: parsed.draftResponse,
+        model_used: `groq:${model}`,
+        confidence: typeof parsed.category_confidence === 'number' ? parsed.category_confidence : 0.95
+      };
+    } catch (err) {
+      lastError = err;
+      // If rate limited on this model, loop to try the next model!
+      if (err.message.includes('429') || err.message.includes('rate_limit')) {
+        console.warn(`[AI Service] Rate limit on ${model}, attempting failover to next model...`);
+        continue;
+      }
+      throw err;
+    }
   }
 
-  const data = await res.json();
-  const rawContent = data.choices[0]?.message?.content;
-  if (!rawContent) {
-    throw new Error('Groq returned empty completion content');
-  }
-
-  const parsed = JSON.parse(rawContent.trim());
-
-  return {
-    category: normalizeCategory(parsed.category),
-    category_confidence: typeof parsed.category_confidence === 'number' ? parsed.category_confidence : 0.95,
-    priority: normalizePriority(parsed.priority),
-    priority_reason: parsed.priority_reason || 'AI assessed priority based on ticket content',
-    draftResponse: parsed.draftResponse,
-    model_used: `groq:${model}`,
-    confidence: typeof parsed.category_confidence === 'number' ? parsed.category_confidence : 0.95
-  };
+  throw lastError;
 }
 
 /**
