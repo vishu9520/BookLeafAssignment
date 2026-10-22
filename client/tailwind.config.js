@@ -8,28 +8,28 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f0f7ff',
-          100: '#e0effe',
-          200: '#bae0fd',
-          300: '#7cc7fb',
-          400: '#38a8f7',
-          500: '#0e8ceb',
-          600: '#026fc9',
-          700: '#0358a3',
-          800: '#074b86',
-          900: '#0c3f6f',
-          950: '#082849',
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+          950: '#052e16',
         },
-        paper: '#f8fafc',
+        paper: '#ffffff',
         bookleaf: {
           dark: '#0f172a',
-          card: '#1e293b',
+          card: '#ffffff',
           accent: '#10b981',
           gold: '#f59e0b',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       }
     },
   },

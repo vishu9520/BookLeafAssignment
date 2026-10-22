@@ -10,9 +10,9 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white space-y-3">
-        <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-slate-400 font-medium tracking-wider uppercase">Loading BookLeaf Portal...</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center text-emerald-800 space-y-3">
+        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-xs text-emerald-600 font-bold tracking-wider uppercase">Loading BookLeaf Portal...</p>
       </div>
     );
   }
@@ -22,15 +22,15 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 bg-white">
         {user.role === 'admin' ? <AdminDashboard /> : <AuthorDashboard />}
       </main>
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+      <footer className="bg-white border-t border-emerald-100 py-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>© 2026 BookLeaf Publishing. All rights reserved.</span>
-          <span className="flex items-center gap-1.5 text-slate-400">
+          <span className="text-slate-600 font-medium">© 2026 <strong className="text-emerald-700">BookLeaf Publishing</strong>. All rights reserved.</span>
+          <span className="flex items-center gap-1.5 text-emerald-600/80 font-medium">
             <span>Powered by BookLeaf AI Assistant & Real-Time Sync</span>
           </span>
         </div>

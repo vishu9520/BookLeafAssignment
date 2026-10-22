@@ -95,20 +95,20 @@ export default function AuthorDashboard() {
   }, [socket, user]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial-gradient from-brand-500/10 to-transparent pointer-events-none" />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in bg-white min-h-[calc(100vh-4rem)]">
+      {/* Welcome Banner - Clean White with Light Green Highlights */}
+      <div className="bg-gradient-to-r from-emerald-50/60 via-white to-teal-50/40 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-sm border border-emerald-200/80 relative overflow-hidden">
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial-gradient from-emerald-200/20 to-transparent pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-semibold border border-brand-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/70 text-emerald-800 text-xs font-bold border border-emerald-200">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               <span>BookLeaf Author Community</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Welcome back, {user?.name}
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-800">
+              Welcome back, <span className="text-emerald-600">{user?.name}</span>
             </h1>
-            <p className="text-sm text-slate-300 max-w-xl">
+            <p className="text-sm text-slate-600 max-w-xl font-normal leading-relaxed">
               Track your book distribution across global channels, review your quarterly royalty statements, and receive fast support from our publishing desk.
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function AuthorDashboard() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-2 px-5 py-3 bg-brand-500 hover:bg-brand-400 text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-lg shadow-brand-500/25 active:scale-95"
+              className="flex items-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-lg shadow-emerald-600/20 active:scale-95"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Raise Support Ticket</span>
@@ -126,49 +126,49 @@ export default function AuthorDashboard() {
 
         {/* Quick Author Financial KPI Cards */}
         {stats && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-800/80">
-            <div className="bg-slate-800/50 backdrop-blur rounded-xl p-4 border border-slate-700/60">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-emerald-100">
+            <div className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
+              <div className="flex items-center justify-between text-emerald-700 text-xs font-bold uppercase tracking-wider">
                 <span>Total Copies Sold</span>
-                <TrendingUp className="w-4 h-4 text-brand-400" />
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
               </div>
-              <div className="text-2xl font-bold text-white mt-1">
+              <div className="text-2xl font-extrabold text-slate-900 mt-1">
                 {stats.totalCopiesSold.toLocaleString('en-IN')}
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Across all storefronts</div>
+              <div className="text-[11px] text-emerald-600/80 font-medium mt-0.5">Across all retail channels</div>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur rounded-xl p-4 border border-slate-700/60">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <div className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
+              <div className="flex items-center justify-between text-emerald-700 text-xs font-bold uppercase tracking-wider">
                 <span>Total Royalty Earned</span>
-                <DollarSign className="w-4 h-4 text-emerald-400" />
+                <DollarSign className="w-4 h-4 text-emerald-500" />
               </div>
-              <div className="text-2xl font-bold text-white mt-1">
+              <div className="text-2xl font-extrabold text-emerald-700 mt-1">
                 ₹{stats.totalRoyaltyEarned.toLocaleString('en-IN')}
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">80% net author profit</div>
+              <div className="text-[11px] text-emerald-600/80 font-medium mt-0.5">80% net author profit</div>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur rounded-xl p-4 border border-slate-700/60">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <div className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
+              <div className="flex items-center justify-between text-emerald-700 text-xs font-bold uppercase tracking-wider">
                 <span>Disbursed Royalty</span>
-                <CheckCircle className="w-4 h-4 text-purple-400" />
+                <CheckCircle className="w-4 h-4 text-teal-500" />
               </div>
-              <div className="text-2xl font-bold text-white mt-1">
+              <div className="text-2xl font-extrabold text-slate-900 mt-1">
                 ₹{stats.totalRoyaltyPaid.toLocaleString('en-IN')}
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Paid via direct bank transfer</div>
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">Paid via direct bank transfer</div>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur rounded-xl p-4 border border-slate-700/60">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <div className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
+              <div className="flex items-center justify-between text-emerald-700 text-xs font-bold uppercase tracking-wider">
                 <span>Pending Payout</span>
-                <Clock className="w-4 h-4 text-amber-400" />
+                <Clock className="w-4 h-4 text-amber-500" />
               </div>
-              <div className="text-2xl font-bold text-amber-300 mt-1">
+              <div className="text-2xl font-extrabold text-amber-600 mt-1">
                 ₹{stats.totalRoyaltyPending.toLocaleString('en-IN')}
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">
                 {stats.totalRoyaltyPending >= 1000
                   ? 'Eligible for next quarterly cycle'
                   : 'Threshold ₹1,000 (rolls over)'}
@@ -179,14 +179,14 @@ export default function AuthorDashboard() {
       </div>
 
       {/* Main Tabs Navigation */}
-      <div className="flex items-center justify-between border-b border-slate-200">
+      <div className="flex items-center justify-between border-b border-emerald-100">
         <div className="flex gap-4">
           <button
             onClick={() => setActiveTab('books')}
             className={`pb-3.5 px-3 font-bold text-sm flex items-center gap-2 border-b-2 transition ${
               activeTab === 'books'
-                ? 'border-brand-600 text-brand-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-emerald-600 text-emerald-700'
+                : 'border-transparent text-slate-500 hover:text-emerald-600'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -196,8 +196,8 @@ export default function AuthorDashboard() {
             onClick={() => setActiveTab('tickets')}
             className={`pb-3.5 px-3 font-bold text-sm flex items-center gap-2 border-b-2 transition ${
               activeTab === 'tickets'
-                ? 'border-brand-600 text-brand-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-emerald-600 text-emerald-700'
+                : 'border-transparent text-slate-500 hover:text-emerald-600'
             }`}
           >
             <MessageSquare className="w-4 h-4" />
@@ -213,7 +213,7 @@ export default function AuthorDashboard() {
             fetchBooks();
             fetchTickets();
           }}
-          className="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1.5 pb-2"
+          className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 pb-2"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Refresh</span>
@@ -224,10 +224,10 @@ export default function AuthorDashboard() {
       {activeTab === 'books' && (
         <div className="space-y-6">
           {loading ? (
-            <div className="p-16 text-center text-slate-400">Loading catalog...</div>
+            <div className="p-16 text-center text-emerald-700">Loading catalog...</div>
           ) : books.length === 0 ? (
-            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
-              <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <div className="p-12 text-center bg-white rounded-2xl border border-emerald-100">
+              <BookOpen className="w-12 h-12 text-emerald-300 mx-auto mb-3" />
               <h3 className="text-base font-bold text-slate-700">No books found</h3>
               <p className="text-xs text-slate-500 mt-1">You do not have any titles associated with this profile yet.</p>
             </div>
@@ -238,12 +238,12 @@ export default function AuthorDashboard() {
                 return (
                   <div
                     key={book.book_id}
-                    className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-5"
+                    className="bg-white rounded-3xl border border-emerald-100 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-5"
                   >
                     <div>
                       {/* Top Badges */}
                       <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                        <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-100">
                           {book.book_id}
                         </span>
                         <span
@@ -265,7 +265,7 @@ export default function AuthorDashboard() {
                       {/* Title & Genre */}
                       <h3 className="text-lg font-bold text-slate-900 tracking-tight">{book.title}</h3>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        Genre: <span className="font-medium text-slate-700">{book.genre}</span>
+                        Genre: <span className="font-semibold text-emerald-700">{book.genre}</span>
                         {book.publication_date && (
                           <span>
                             {' '}• Published:{' '}
@@ -278,7 +278,7 @@ export default function AuthorDashboard() {
                       </p>
 
                       {/* ISBN & Print Partner */}
-                      <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-600 bg-emerald-50/30 p-2.5 rounded-xl border border-emerald-100">
                         <div>
                           ISBN: <strong className="font-mono text-slate-800">{book.isbn || 'Pending Assignment'}</strong>
                         </div>
@@ -292,11 +292,11 @@ export default function AuthorDashboard() {
 
                     {/* Financial Metrics Grid */}
                     {isLive ? (
-                      <div className="grid grid-cols-3 gap-2 bg-slate-50/80 p-3.5 rounded-xl border border-slate-200 text-center">
+                      <div className="grid grid-cols-3 gap-2 bg-emerald-50/20 p-3.5 rounded-2xl border border-emerald-100 text-center">
                         <div>
                           <div className="text-[11px] text-slate-500 font-medium">MRP / Royalty</div>
                           <div className="text-sm font-bold text-slate-900 mt-0.5">
-                            ₹{book.mrp} / <span className="text-brand-600">₹{book.author_royalty_per_copy}</span>
+                            ₹{book.mrp} / <span className="text-emerald-600 font-extrabold">₹{book.author_royalty_per_copy}</span>
                           </div>
                         </div>
                         <div>
@@ -331,7 +331,7 @@ export default function AuthorDashboard() {
                           book.available_on.map((store, i) => (
                             <span
                               key={i}
-                              className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-semibold text-slate-600 border border-slate-200"
+                              className="px-2 py-0.5 rounded bg-emerald-50/60 text-[10px] font-semibold text-emerald-800 border border-emerald-100"
                             >
                               {store}
                             </span>
@@ -345,7 +345,7 @@ export default function AuthorDashboard() {
                         onClick={() => {
                           setIsCreateModalOpen(true);
                         }}
-                        className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition"
+                        className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition"
                       >
                         <span>Query about this book</span>
                         <ExternalLink className="w-3 h-3" />
@@ -363,50 +363,52 @@ export default function AuthorDashboard() {
       {activeTab === 'tickets' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-slate-800">Your Communication & Ticket History</h2>
+            <h2 className="text-base font-bold text-emerald-900">Your Communication & Ticket History</h2>
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition shadow-sm"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-sm"
             >
               + New Query
             </button>
           </div>
 
           {loading ? (
-            <div className="p-16 text-center text-slate-400">Loading tickets...</div>
+            <div className="p-16 text-center text-emerald-700">Loading tickets...</div>
           ) : tickets.length === 0 ? (
-            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
-              <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <div className="p-12 text-center bg-white rounded-2xl border border-emerald-100">
+              <MessageSquare className="w-12 h-12 text-emerald-200 mx-auto mb-3" />
               <h3 className="text-base font-bold text-slate-700">No support tickets</h3>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                 Have a question about your royalties, ISBN catalog, or print quality? Submit a query and our team will assist you.
               </p>
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="mt-4 px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-xl"
+                className="mt-4 px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl"
               >
                 Create Your First Ticket
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm divide-y divide-slate-100">
+            <div className="bg-white rounded-3xl border border-emerald-100 overflow-hidden shadow-sm divide-y divide-slate-100">
               {tickets.map((t) => (
                 <div
                   key={t._id}
                   onClick={() => setSelectedTicketId(t._id)}
-                  className="p-5 hover:bg-slate-50/80 transition cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                  className="p-5 hover:bg-emerald-50/30 transition cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
                 >
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-slate-600">{t.ticket_number}</span>
+                      <span className="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                        {t.ticket_number}
+                      </span>
                       <CategoryBadge category={t.category} />
                       <StatusBadge status={t.status} size="sm" />
-                      <span className="text-xs text-slate-400 font-normal">
-                        Book: <strong>{t.book_title}</strong>
+                      <span className="text-xs text-slate-500 font-normal">
+                        Book: <strong className="text-slate-800">{t.book_title}</strong>
                       </span>
                     </div>
 
-                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-brand-600 transition truncate">
+                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition truncate">
                       {t.subject}
                     </h4>
 
@@ -421,7 +423,7 @@ export default function AuthorDashboard() {
                         year: 'numeric'
                       })}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold text-[11px]">
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px] border border-emerald-100">
                       {t.responses?.length || 0} response{t.responses?.length === 1 ? '' : 's'}
                     </span>
                   </div>
