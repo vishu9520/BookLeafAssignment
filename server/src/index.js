@@ -42,13 +42,23 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+const getAiStatus = () => {
+  if (process.env.GROQ_API_KEY && !process.env.GROQ_API_KEY.includes('your_groq')) {
+    return `groq-active (${process.env.GROQ_MODEL || 'qwen/qwen3.8-27b'})`;
+  }
+  if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.includes('your_gemini')) {
+    return 'gemini-active';
+  }
+  return 'heuristic-fallback-active';
+};
+
 // Health Check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
     service: 'BookLeaf Publishing Support Portal API',
-    ai_status: process.env.GEMINI_API_KEY ? 'gemini-active' : 'heuristic-fallback-active'
+    ai_status: getAiStatus()
   });
 });
 
@@ -102,7 +112,7 @@ connectDB().then(() => {
     console.log(`🚀 BookLeaf Server listening on http://localhost:${PORT}`);
     console.log(`📖 Interactive API Documentation: http://localhost:${PORT}/api-docs`);
     console.log(`⚡ Real-Time WebSockets: Active`);
-    console.log(`🤖 AI Engine: ${process.env.GEMINI_API_KEY ? 'Gemini 1.5 Flash' : 'BookLeaf Heuristic AI Engine (Graceful Mode)'}`);
+    console.log(`🤖 AI Engine: ${getAiStatus()}`);
     console.log(`======================================================\n`);
   });
 });

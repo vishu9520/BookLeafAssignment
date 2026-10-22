@@ -57,8 +57,9 @@ The database is pre-seeded with all **10 authors** and **18 books** from the pro
                                │                   │
                ┌───────────────▼──────┐    ┌───────▼────────────────────────┐
                │    MongoDB Atlas     │    │       AI Integration Layer     │
-               │ (Users, Books,       │    │  Google Gemini 1.5 Flash       │
-               │  Tickets, Notes)     │    │  + BookLeaf Heuristic Engine   │
+               │ (Users, Books,       │    │  Groq Cloud (Qwen 3.8 27B)     │
+               │  Tickets, Notes)     │    │  + Google Gemini 1.5 Flash     │
+               │                      │    │  + BookLeaf Heuristic Engine   │
                └──────────────────────┘    └────────────────────────────────┘
 ```
 
@@ -66,6 +67,10 @@ The database is pre-seeded with all **10 authors** and **18 books** from the pro
 - **Backend**: Node.js, Express 4, Socket.io (WebSocket duplex communication), Mongoose 8.
 - **Frontend**: React 18, Vite 6, Tailwind CSS, Lucide Icons, Axios (with automatic refresh-token rotation interceptors).
 - **Database**: MongoDB Atlas Cluster (`cluster0.dalbiv3.mongodb.net/vishuvatsay`).
+- **AI / LLM Integration**: Multi-provider support:
+  - **Groq Cloud** (`qwen/qwen3.8-27b` / `openai/gpt-oss-120b`) for sub-second, cost-efficient inference.
+  - **Google Gemini** (`gemini-1.5-flash`).
+  - **BookLeaf Heuristic Engine** for instant offline fallback.
 - **Authentication**: Stateless JWT Access Token (`15m` validity) + Stateful JWT Refresh Token (`7d` validity) with database verification, multi-session rotation, and automatic request queuing.
 - **API Spec**: Interactive Swagger UI at `http://localhost:5000/api-docs`.
 

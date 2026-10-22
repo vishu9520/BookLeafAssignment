@@ -1,6 +1,20 @@
 const BOOKLEAF_KB = require('../constants/knowledgeBase');
 
 /**
+ * Valid BookLeaf Categories and Priorities
+ */
+const VALID_CATEGORIES = [
+  'Royalty & Payments',
+  'ISBN & Metadata Issues',
+  'Printing & Quality',
+  'Distribution & Availability',
+  'Book Status & Production Updates',
+  'General Inquiry'
+];
+
+const VALID_PRIORITIES = ['Critical', 'High', 'Medium', 'Low'];
+
+/**
  * Intelligent Keyword & Intent Matcher for Token-Efficient Knowledge Base Retrieval
  * (RAG / Context Minimization for Cost Awareness)
  */
@@ -201,35 +215,46 @@ BookLeaf Author Support Team`;
 }
 
 /**
- * Main AI Analysis Function:
- * Integrates Gemini API if GEMINI_API_KEY is provided;
- * Degrades gracefully to the intelligent heuristic engine on error or missing key.
+ * Normalizes category output from LLM to match valid BookLeaf categories
  */
-async function analyzeTicketAndDraftResponse({ subject, description, authorData, bookData }) {
-  const apiKey = process.env.GEMINI_API_KEY;
+function normalizeCategory(raw) {
+  if (!raw) return 'General Inquiry';
+  const clean = raw.trim();
+  const found = VALID_CATEGORIES.find(c => c.toLowerCase() === clean.toLowerCase());
+  if (found) return found;
 
-  // If no API key is provided, use the heuristic engine immediately
-  if (!apiKey || apiKey.trim() === '' || apiKey.includes('your_gemini')) {
-    console.log('[AI Service] No Gemini API key provided. Using built-in BookLeaf AI Heuristic Engine.');
-    return heuristicAnalysis(subject, description, bookData, authorData);
-  }
+  const lower = clean.toLowerCase();
+  if (lower.includes('royalt') || lower.includes('payment')) return 'Royalty & Payments';
+  if (lower.includes('isbn') || lower.includes('meta')) return 'ISBN & Metadata Issues';
+  if (lower.includes('print') || lower.includes('qual')) return 'Printing & Quality';
+  if (lower.includes('distribut') || lower.includes('avail')) return 'Distribution & Availability';
+  if (lower.includes('status') || lower.includes('product')) return 'Book Status & Production Updates';
+  return 'General Inquiry';
+}
 
-  try {
-    const { GoogleGenerativeAI } = require('@google/generative-ai');
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+/**
+ * Normalizes priority output
+ */
+function normalizePriority(raw) {
+  if (!raw) return 'Medium';
+  const found = VALID_PRIORITIES.find(p => p.toLowerCase() === raw.trim().toLowerCase());
+  return found || 'Medium';
+}
 
-    // Targeted KB extraction for cost-conscious token minimization
-    const targetedKB = getTargetedKnowledgeBase(subject, description);
+/**
+ * Call Groq Cloud API (Llama / Qwen / Mixtral / GPT-OSS)
+ */
+async function callGroqAPI({ subject, description, authorData, bookData, apiKey, modelName }) {
+  const targetedKB = getTargetedKnowledgeBase(subject, description);
 
-    const authorContext = authorData ? `
+  const authorContext = authorData ? `
 Author Information:
 - Name: ${authorData.name}
 - Email: ${authorData.email}
 - Joined Date: ${authorData.joined_date || 'N/A'}
 ` : '';
 
-    const bookContext = bookData ? `
+  const bookContext = bookData ? `
 Book Information:
 - Title: ${bookData.title}
 - ISBN: ${bookData.isbn || 'Pending'}
@@ -245,7 +270,111 @@ Book Information:
 - Available On: ${bookData.available_on ? bookData.available_on.join(', ') : 'N/A'}
 ` : 'Book Information: General / Account-Level Query (No specific book attached)';
 
-    const prompt = `You are the lead AI support assistant for BookLeaf Publishing, an author-first self-publishing company.
+  const systemPrompt = `You are the lead AI support assistant for BookLeaf Publishing, an author-first self-publishing company.
+Analyze the author's support ticket and respond with a strict JSON object containing:
+1. "category": Must be one of ["Royalty & Payments", "ISBN & Metadata Issues", "Printing & Quality", "Distribution & Availability", "Book Status & Production Updates", "General Inquiry"]
+2. "category_confidence": Number between 0.8 and 1.0
+3. "priority": One of ["Critical", "High", "Medium", "Low"]
+4. "priority_reason": A concise 1-sentence reason for this priority score
+5. "draftResponse": An empathetic, professional, and specific draft response addressing the author's query.
+
+BOOKLEAF KNOWLEDGE BASE & POLICIES:
+${targetedKB}
+
+${authorContext}
+${bookContext}
+
+RESPONSE TONE GUIDELINES:
+- Empathetic and professional. Treat authors as creative partners.
+- Acknowledge their concern warmly before addressing specifics.
+- Cite exact numbers, titles, and dates from the BookLeaf context where applicable.
+- If it is BookLeaf's responsibility (e.g. payout delay, ISBN mismatch, print defect), own it directly.
+- Give concrete timelines (e.g. 48 hours for investigations, 5-7 business days for reprints).
+- Always end with clear, actionable next steps.`;
+
+  const userPrompt = `AUTHOR TICKET:
+Subject: ${subject}
+Description: ${description}
+
+Return ONLY a valid JSON object with keys: category, category_confidence, priority, priority_reason, draftResponse.`;
+
+  const model = modelName || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
+
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      response_format: { type: 'json_object' },
+      temperature: 0.3
+    })
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Groq API responded with status ${res.status}: ${errorText}`);
+  }
+
+  const data = await res.json();
+  const rawContent = data.choices[0]?.message?.content;
+  if (!rawContent) {
+    throw new Error('Groq returned empty completion content');
+  }
+
+  const parsed = JSON.parse(rawContent.trim());
+
+  return {
+    category: normalizeCategory(parsed.category),
+    category_confidence: typeof parsed.category_confidence === 'number' ? parsed.category_confidence : 0.95,
+    priority: normalizePriority(parsed.priority),
+    priority_reason: parsed.priority_reason || 'AI assessed priority based on ticket content',
+    draftResponse: parsed.draftResponse,
+    model_used: `groq:${model}`,
+    confidence: typeof parsed.category_confidence === 'number' ? parsed.category_confidence : 0.95
+  };
+}
+
+/**
+ * Call Google Gemini API
+ */
+async function callGeminiAPI({ subject, description, authorData, bookData, apiKey }) {
+  const { GoogleGenerativeAI } = require('@google/generative-ai');
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+  const targetedKB = getTargetedKnowledgeBase(subject, description);
+
+  const authorContext = authorData ? `
+Author Information:
+- Name: ${authorData.name}
+- Email: ${authorData.email}
+- Joined Date: ${authorData.joined_date || 'N/A'}
+` : '';
+
+  const bookContext = bookData ? `
+Book Information:
+- Title: ${bookData.title}
+- ISBN: ${bookData.isbn || 'Pending'}
+- Genre: ${bookData.genre || 'N/A'}
+- Publication Date: ${bookData.publication_date || 'In Production'}
+- Status: ${bookData.status}
+- Total Copies Sold: ${bookData.total_copies_sold || 0}
+- Total Royalty Earned: ₹${bookData.total_royalty_earned || 0}
+- Royalty Paid: ₹${bookData.royalty_paid || 0}
+- Royalty Pending: ₹${bookData.royalty_pending || 0}
+- Last Royalty Payout Date: ${bookData.last_royalty_payout_date || 'None'}
+- Print Partner: ${bookData.print_partner || 'In-House'}
+- Available On: ${bookData.available_on ? bookData.available_on.join(', ') : 'N/A'}
+` : 'Book Information: General / Account-Level Query (No specific book attached)';
+
+  const prompt = `You are the lead AI support assistant for BookLeaf Publishing, an author-first self-publishing company.
 Analyze this author support ticket and provide:
 1. Category classification (MUST be one of: "Royalty & Payments", "ISBN & Metadata Issues", "Printing & Quality", "Distribution & Availability", "Book Status & Production Updates", "General Inquiry")
 2. Priority score ("Critical", "High", "Medium", "Low") with a concise reason.
@@ -261,14 +390,6 @@ AUTHOR TICKET:
 Subject: ${subject}
 Description: ${description}
 
-RESPONSE TONE REQUIREMENTS:
-- Empathetic and professional. Treat authors as creative partners, not customers to be brushed off.
-- Acknowledge their specific concern before jumping into details.
-- Cite specific numbers, dates, titles, and amounts from the BookLeaf context where applicable.
-- If it is BookLeaf's responsibility (e.g. payout delay, ISBN mismatch, print defect), own it transparently with zero corporate deflection.
-- Give concrete timelines (e.g. 48 hours for investigations, 5-7 business days for reprints).
-- End with clear, actionable next steps.
-
 Return ONLY a valid JSON object with the following schema, no markdown code fences:
 {
   "category": "string",
@@ -278,33 +399,73 @@ Return ONLY a valid JSON object with the following schema, no markdown code fenc
   "draftResponse": "string"
 }`;
 
-    const result = await model.generateContent(prompt);
-    const rawText = result.response.text().trim();
-    
-    // Clean potential markdown wrap
-    const cleanedText = rawText.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
-    const parsed = JSON.parse(cleanedText);
+  const result = await model.generateContent(prompt);
+  const rawText = result.response.text().trim();
+  const cleanedText = rawText.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
+  const parsed = JSON.parse(cleanedText);
 
-    return {
-      category: parsed.category || 'General Inquiry',
-      category_confidence: parsed.category_confidence || 0.95,
-      priority: parsed.priority || 'Medium',
-      priority_reason: parsed.priority_reason || 'AI assessed priority based on ticket content',
-      draftResponse: parsed.draftResponse,
-      model_used: 'gemini-1.5-flash',
-      confidence: parsed.category_confidence || 0.95
-    };
+  return {
+    category: normalizeCategory(parsed.category),
+    category_confidence: parsed.category_confidence || 0.95,
+    priority: normalizePriority(parsed.priority),
+    priority_reason: parsed.priority_reason || 'AI assessed priority based on ticket content',
+    draftResponse: parsed.draftResponse,
+    model_used: 'gemini-1.5-flash',
+    confidence: parsed.category_confidence || 0.95
+  };
+}
 
-  } catch (error) {
-    console.warn('[AI Service Warning] Gemini API call failed or rate-limited. Falling back smoothly to Heuristic Engine.', error.message);
-    const fallback = heuristicAnalysis(subject, description, bookData, authorData);
-    fallback.model_used = 'fallback-heuristic (after api error: ' + error.message.slice(0, 30) + ')';
-    return fallback;
+/**
+ * Main AI Analysis Function:
+ * 1. Checks Groq (GROQ_API_KEY) - Fast, high quality LLM
+ * 2. Checks Gemini (GEMINI_API_KEY)
+ * 3. Degrades gracefully to Heuristic Engine on error or missing keys.
+ */
+async function analyzeTicketAndDraftResponse({ subject, description, authorData, bookData }) {
+  const groqApiKey = process.env.GROQ_API_KEY;
+  const geminiApiKey = process.env.GEMINI_API_KEY;
+
+  // 1. Try Groq if key is present
+  if (groqApiKey && groqApiKey.trim() !== '' && !groqApiKey.includes('your_groq')) {
+    try {
+      console.log('[AI Service] Calling Groq LLM API...');
+      return await callGroqAPI({
+        subject,
+        description,
+        authorData,
+        bookData,
+        apiKey: groqApiKey.trim()
+      });
+    } catch (err) {
+      console.warn('[AI Service Warning] Groq API call failed:', err.message);
+    }
   }
+
+  // 2. Try Gemini if key is present
+  if (geminiApiKey && geminiApiKey.trim() !== '' && !geminiApiKey.includes('your_gemini')) {
+    try {
+      console.log('[AI Service] Calling Google Gemini API...');
+      return await callGeminiAPI({
+        subject,
+        description,
+        authorData,
+        bookData,
+        apiKey: geminiApiKey.trim()
+      });
+    } catch (err) {
+      console.warn('[AI Service Warning] Gemini API call failed:', err.message);
+    }
+  }
+
+  // 3. Fallback to BookLeaf Heuristic Engine
+  console.log('[AI Service] Using built-in BookLeaf AI Heuristic Engine (Fallback).');
+  return heuristicAnalysis(subject, description, bookData, authorData);
 }
 
 module.exports = {
   analyzeTicketAndDraftResponse,
   heuristicAnalysis,
+  callGroqAPI,
+  callGeminiAPI,
   getTargetedKnowledgeBase
 };
