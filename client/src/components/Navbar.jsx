@@ -1,0 +1,118 @@
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
+import { BookOpen, LogOut, Radio, User, ChevronDown, Check } from 'lucide-react';
+
+const TEST_PERSONAS = [
+  { name: 'Priya Sharma (Author)', email: 'priya.sharma@email.com', role: 'author' },
+  { name: 'Rohit Kapoor (Author)', email: 'rohit.kapoor@email.com', role: 'author' },
+  { name: 'Ananya Reddy (Author)', email: 'ananya.reddy@email.com', role: 'author' },
+  { name: 'Vikram Joshi (Author)', email: 'vikram.joshi@email.com', role: 'author' },
+  { name: 'BookLeaf Ops Admin', email: 'admin@bookleaf.com', role: 'admin' },
+];
+
+export default function Navbar() {
+  const { user, logout, login } = useAuth();
+  const { isConnected } = useSocket();
+  const [personaOpen, setPersonaOpen] = useState(false);
+  const [switching, setSwitching] = useState(false);
+
+  const handleSwitch = async (email, role) => {
+    try {
+      setSwitching(true);
+      const password = role === 'admin' ? 'admin123' : 'author123';
+      await login(email, password);
+      setPersonaOpen(false);
+    } catch (err) {
+      console.error('Failed to switch persona:', err);
+    } finally {
+      setSwitching(false);
+    }
+  };
+
+  return (
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Brand */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-lg text-slate-900 tracking-tight">BookLeaf</span>
+              <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">
+                {user?.role === 'admin' ? 'Ops Admin Portal' : 'Author Portal'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 font-medium hidden sm:block">Author Support & Communication Platform</p>
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Socket Real-time Indicator */}
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-600">
+            <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+            <span>{isConnected ? 'Real-Time Sync Active' : 'Connecting...'}</span>
+          </div>
+
+          {/* Quick Switch Persona (Evaluation helper) */}
+          <div className="relative">
+            <button
+              onClick={() => setPersonaOpen(!personaOpen)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 transition"
+              title="Quickly switch between Author and Admin test accounts"
+            >
+              <User className="w-3.5 h-3.5 text-brand-600" />
+              <span className="hidden sm:inline">Switch Persona</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            </button>
+
+            {personaOpen && (
+              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-slate-200 p-2 z-50 animate-fade-in">
+                <div className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                  Test Credentials Quick Switch
+                </div>
+                {TEST_PERSONAS.map((p) => {
+                  const isActive = user?.email === p.email;
+                  return (
+                    <button
+                      key={p.email}
+                      disabled={switching}
+                      onClick={() => handleSwitch(p.email, p.role)}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs flex items-center justify-between transition ${
+                        isActive ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      <div>
+                        <div>{p.name}</div>
+                        <div className="text-[10px] text-slate-400">{p.email}</div>
+                      </div>
+                      {isActive && <Check className="w-4 h-4 text-brand-600" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* User Profile & Logout */}
+          <div className="flex items-center gap-3 pl-2 sm:pl-3 border-l border-slate-200">
+            <div className="text-right hidden sm:block">
+              <div className="text-xs font-bold text-slate-900">{user?.name}</div>
+              <div className="text-[11px] text-slate-500">{user?.email}</div>
+            </div>
+            <button
+              onClick={logout}
+              className="p-2 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition border border-transparent hover:border-rose-100"
+              title="Log Out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
