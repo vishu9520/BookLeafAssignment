@@ -3,16 +3,24 @@
   "version": "1.0.0",
   "description": "BookLeaf Publishing - Author Support & Communication Portal",
   "scripts": {
-    "install:server": "cd server && npm install",
-    "install:client": "cd client && npm install",
-    "install:all": "npm run install:server && npm run install:client",
-    "seed": "cd server && npm run seed",
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "build": "cd client && npm run build",
-    "start": "cd server && npm start"
+    "install:server": "npm --prefix server install",
+    "install:client": "npm --prefix client install",
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "seed": "npm --prefix server run seed",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "build": "npm --prefix server install && npm --prefix client install && npm --prefix client run build",
+    "start": "node server/src/index.js"
   },
-  "keywords": ["bookleaf", "publishing", "author-support", "ai", "gemini", "socket.io", "react"],
+  "keywords": [
+    "bookleaf",
+    "publishing",
+    "author-support",
+    "ai",
+    "gemini",
+    "socket.io",
+    "react"
+  ],
   "author": "Vishu Vatsay",
   "license": "ISC"
 }
