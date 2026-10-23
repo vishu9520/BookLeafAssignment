@@ -32,7 +32,22 @@ The database is pre-seeded with all **10 authors** and **18 books** from the pro
 | **Author** | Kavita Deshmukh (`AUTH009`)| `kavita.deshmukh@email.com` | `author123` | 1 live book + 1 in production (`Raising Roots` - Typesetting) |
 | *All Authors*| Authors 001 through 010 | `<firstname>.<lastname>@email.com` | `author123` | Seeded identically to official JSON |
 
-> 💡 **Evaluator Convenience**: The login page also features **1-Click Quick Login persona cards** and a **Persona Switcher** in the navigation bar to test any account with a single click!
+> 💡 **Production Authentication**: For strict security, login requires entering email and password credentials. Use any account from the table above.
+
+---
+
+## 🗺️ Frontend Route Architecture
+
+The frontend uses strict client-side routing powered by `react-router-dom`:
+
+| Route | View Component | Access Level | Description |
+| :--- | :--- | :--- | :--- |
+| **`/`** | `LandingPage.jsx` | Public | Streamlined, distraction-free Author Support & Communication Portal landing page |
+| **`/login`** | `LoginView.jsx` | Public | Dedicated credential authentication form with JWT access/refresh token initialization |
+| **`/author`** | `AuthorDashboard.jsx` | Author (`AUTH001-AUTH010`) | Protected Author Desk: books, 80/20 royalty statements, ticket creation & real-time chat |
+| **`/admin`** | `AdminDashboard.jsx` | Admin | Protected Operations Desk: ticket queue triage, AI classification overrides, AI drafts |
+| **`*`** | `ErrorPage.jsx` | Catch-All (Public) | Flashes an animated **`HTTP 404: ROUTE_NOT_FOUND`** screen with home navigation |
+| *Guarded* | `ProtectedRoute.jsx` | Role-Enforced | Flashes an animated **`HTTP 403: ACCESS_DENIED`** screen on unauthorized cross-role access |
 
 ---
 

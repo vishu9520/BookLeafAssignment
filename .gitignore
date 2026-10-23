@@ -5,6 +5,9 @@ build/
 .npm
 
 # Environment Variables
+.env
+server/.env
+client/.env
 .env.local
 .env.*.local
 *.log

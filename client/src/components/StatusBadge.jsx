@@ -2,8 +2,8 @@ import React from 'react';
 
 const statusConfig = {
   Open: {
-    bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    dot: 'bg-emerald-500'
+    bg: 'bg-rose-50 text-rose-700 border-rose-200',
+    dot: 'bg-rose-500'
   },
   'In Progress': {
     bg: 'bg-blue-50 text-blue-700 border-blue-200',

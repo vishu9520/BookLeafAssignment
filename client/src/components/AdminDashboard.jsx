@@ -126,16 +126,16 @@ export default function AdminDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in bg-white min-h-[calc(100vh-4rem)]">
-      {/* Top Banner & Queue Metrics - White & Light Green */}
-      <div className="bg-gradient-to-r from-emerald-50/60 via-white to-teal-50/40 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-sm border border-emerald-200/80 space-y-6">
+      {/* Top Banner & Queue Metrics - White & BookLeaf Coral */}
+      <div className="bg-gradient-to-r from-rose-50/70 via-white to-pink-50/50 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-sm border border-rose-200/80 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/70 text-emerald-800 text-xs font-bold border border-emerald-200">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100/70 text-rose-800 text-xs font-bold border border-rose-200">
+              <Sparkles className="w-3.5 h-3.5 text-rose-600" />
               <span>BookLeaf Publishing Operations Intelligence</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-800 mt-2">
-              Author Support & <span className="text-emerald-600">Ticket Queue</span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-2">
+              Author Support & <span className="text-rose-600">Ticket Queue</span>
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Automated AI Classification, Priority Assessment & Knowledge Base Response Drafting.
@@ -144,31 +144,31 @@ export default function AdminDashboard() {
 
           <button
             onClick={fetchTickets}
-            className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 shadow-sm transition"
+            className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-rose-50 text-rose-800 text-xs font-bold rounded-xl border border-rose-200 shadow-sm transition"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-rose-600 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh Queue</span>
           </button>
         </div>
 
         {/* High-level Queue Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4 border-t border-emerald-100">
-          <div className="bg-white p-3.5 rounded-2xl border border-emerald-100 shadow-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4 border-t border-rose-100">
+          <div className="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-sm">
             <div className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Total Tickets</div>
             <div className="text-2xl font-extrabold text-slate-900 mt-1">{metrics.total}</div>
           </div>
-          <div className="bg-white p-3.5 rounded-2xl border border-emerald-100 shadow-sm">
-            <div className="text-[11px] text-emerald-700 font-bold uppercase tracking-wider flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-sm">
+            <div className="text-[11px] text-rose-700 font-bold uppercase tracking-wider flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
               Open Tickets
             </div>
-            <div className="text-2xl font-extrabold text-emerald-600 mt-1">{metrics.open}</div>
+            <div className="text-2xl font-extrabold text-rose-600 mt-1">{metrics.open}</div>
           </div>
-          <div className="bg-white p-3.5 rounded-2xl border border-emerald-100 shadow-sm">
-            <div className="text-[11px] text-teal-700 font-bold uppercase tracking-wider">In Progress</div>
-            <div className="text-2xl font-extrabold text-teal-600 mt-1">{metrics.inProgress}</div>
+          <div className="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-sm">
+            <div className="text-[11px] text-amber-700 font-bold uppercase tracking-wider">In Progress</div>
+            <div className="text-2xl font-extrabold text-amber-600 mt-1">{metrics.inProgress}</div>
           </div>
-          <div className="bg-white p-3.5 rounded-2xl border border-emerald-100 shadow-sm">
+          <div className="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-sm">
             <div className="text-[11px] text-purple-700 font-bold uppercase tracking-wider">Resolved</div>
             <div className="text-2xl font-extrabold text-purple-600 mt-1">{metrics.resolved}</div>
           </div>
@@ -185,17 +185,17 @@ export default function AdminDashboard() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-rose-100 shadow-sm space-y-4">
         <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
           {/* Search input */}
           <div className="flex-1 relative">
-            <Search className="w-4 h-4 text-emerald-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-rose-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by ticket #, subject, author name, or book title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 bg-emerald-50/20 border border-emerald-200/80 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white text-slate-800 transition"
+              className="w-full pl-9 pr-4 py-2.5 bg-rose-50/20 border border-rose-200/80 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white text-slate-800 transition"
             />
           </div>
 
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 bg-emerald-50/30 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-900 focus:ring-2 focus:ring-emerald-500"
+              className="px-3 py-2 bg-rose-50/30 border border-rose-200 rounded-xl text-xs font-bold text-rose-900 focus:ring-2 focus:ring-rose-500"
             >
               <option value="all">All Statuses</option>
               {STATUSES.filter(s => s !== 'all').map(s => (
@@ -216,7 +216,7 @@ export default function AdminDashboard() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2 bg-emerald-50/30 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-900 focus:ring-2 focus:ring-emerald-500 max-w-[180px] truncate"
+              className="px-3 py-2 bg-rose-50/30 border border-rose-200 rounded-xl text-xs font-bold text-rose-900 focus:ring-2 focus:ring-rose-500 max-w-[180px] truncate"
             >
               <option value="all">All Categories</option>
               {CATEGORIES.filter(c => c !== 'all').map(c => (
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-3 py-2 bg-emerald-50/30 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-900 focus:ring-2 focus:ring-emerald-500"
+              className="px-3 py-2 bg-rose-50/30 border border-rose-200 rounded-xl text-xs font-bold text-rose-900 focus:ring-2 focus:ring-rose-500"
             >
               <option value="all">All Priorities</option>
               {PRIORITIES.filter(p => p !== 'all').map(p => (
@@ -237,12 +237,12 @@ export default function AdminDashboard() {
             </select>
 
             {/* Sort Filter */}
-            <div className="flex items-center gap-1.5 pl-2 border-l border-emerald-100">
-              <ArrowUpDown className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="flex items-center gap-1.5 pl-2 border-l border-rose-100">
+              <ArrowUpDown className="w-3.5 h-3.5 text-rose-600" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 bg-emerald-100/70 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-extrabold focus:ring-2 focus:ring-emerald-500"
+                className="px-3 py-2 bg-rose-100/70 border border-rose-300 text-rose-900 rounded-xl text-xs font-extrabold focus:ring-2 focus:ring-rose-500"
               >
                 <option value="urgent">🚨 Urgent First</option>
                 <option value="oldest_unresolved">⏳ Oldest Unresolved</option>
@@ -255,21 +255,21 @@ export default function AdminDashboard() {
 
       {/* Ticket Queue List */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between text-xs font-semibold text-emerald-800 px-1">
+        <div className="flex items-center justify-between text-xs font-semibold text-rose-800 px-1">
           <span>Displaying {tickets.length} tickets in queue</span>
           <span>Click any ticket to review AI draft, override tags, or respond</span>
         </div>
 
         {loading ? (
-          <div className="p-16 text-center text-emerald-700">Loading queue...</div>
+          <div className="p-16 text-center text-rose-700">Loading queue...</div>
         ) : tickets.length === 0 ? (
-          <div className="p-16 text-center bg-white rounded-3xl border border-emerald-100 space-y-2">
-            <Inbox className="w-12 h-12 text-emerald-200 mx-auto" />
+          <div className="p-16 text-center bg-white rounded-3xl border border-rose-100 space-y-2">
+            <Inbox className="w-12 h-12 text-rose-200 mx-auto" />
             <h3 className="text-base font-bold text-slate-700">No tickets found</h3>
             <p className="text-xs text-slate-500">No author queries match your selected filters.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border border-emerald-100 divide-y divide-emerald-50 overflow-hidden shadow-sm">
+          <div className="bg-white rounded-3xl border border-rose-100 divide-y divide-rose-50 overflow-hidden shadow-sm">
             {tickets.map((t) => {
               const isUrgent = (t.priority === 'Critical' || t.priority === 'High') && t.status !== 'Resolved' && t.status !== 'Closed';
 
@@ -277,14 +277,14 @@ export default function AdminDashboard() {
                 <div
                   key={t._id}
                   onClick={() => setSelectedTicketId(t._id)}
-                  className={`p-5 hover:bg-emerald-50/30 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group ${
+                  className={`p-5 hover:bg-rose-50/30 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group ${
                     isUrgent ? 'border-l-4 border-l-rose-500 bg-rose-50/15' : ''
                   }`}
                 >
                   {/* Left Column: Metadata, Subject, Author */}
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                      <span className="font-mono text-xs font-bold text-rose-800 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
                         {t.ticket_number}
                       </span>
                       <PriorityBadge priority={t.priority} />
@@ -297,7 +297,7 @@ export default function AdminDashboard() {
                       )}
                     </div>
 
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-emerald-700 transition truncate">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-rose-700 transition truncate">
                       {t.subject}
                     </h3>
 
@@ -305,7 +305,7 @@ export default function AdminDashboard() {
 
                     <div className="flex items-center gap-3 text-xs text-slate-500 pt-1">
                       <span className="flex items-center gap-1 font-semibold text-slate-700">
-                        <User className="w-3.5 h-3.5 text-emerald-500" /> {t.author_name}
+                        <User className="w-3.5 h-3.5 text-rose-500" /> {t.author_name}
                       </span>
                       <span>•</span>
                       <span className="truncate max-w-[200px]">
@@ -326,8 +326,8 @@ export default function AdminDashboard() {
                   {/* Right Column: AI Draft status & Action */}
                   <div className="flex items-center justify-between md:justify-end gap-3 text-xs border-t md:border-t-0 pt-2 md:pt-0 border-slate-100 shrink-0">
                     <div className="text-left md:text-right">
-                      <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-700">
-                        <Sparkles className="w-3 h-3 text-emerald-500" />
+                      <div className="flex items-center gap-1 text-[11px] font-bold text-rose-700">
+                        <Sparkles className="w-3 h-3 text-rose-500" />
                         <span>AI Draft Ready</span>
                       </div>
                       <div className="text-[10px] text-slate-400">
@@ -340,7 +340,7 @@ export default function AdminDashboard() {
                         e.stopPropagation();
                         setSelectedTicketId(t._id);
                       }}
-                      className="px-3.5 py-2 bg-emerald-50 group-hover:bg-emerald-600 group-hover:text-white text-emerald-800 font-bold text-xs rounded-xl transition flex items-center gap-1 border border-emerald-100"
+                      className="px-3.5 py-2 bg-rose-50 group-hover:bg-rose-600 group-hover:text-white text-rose-800 font-bold text-xs rounded-xl transition flex items-center gap-1 border border-rose-100"
                     >
                       <span>Manage</span>
                       <ChevronRight className="w-3.5 h-3.5" />

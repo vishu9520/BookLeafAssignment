@@ -84,10 +84,12 @@ if (fs.existsSync(clientDistPath)) {
   });
 }
 
-// 404 Handler
+// 404 Handler for undefined routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
+    statusCode: 404,
+    errorCode: 'ROUTE_NOT_FOUND',
     message: `API endpoint ${req.method} ${req.originalUrl} not found.`
   });
 });

@@ -10,7 +10,7 @@
   }
 }
 
-/* Custom scrollbar in light green / soft mint */
+/* Custom scrollbar in BookLeaf coral / soft rose */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -19,11 +19,11 @@
   background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #a7f3d0;
+  background: #fecdd3;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #6ee7b7;
+  background: #fb7185;
 }
 
 /* Animation utilities */

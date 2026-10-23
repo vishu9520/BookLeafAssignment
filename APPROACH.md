@@ -20,6 +20,18 @@
 4. **Real-Time Responsiveness**:
    Authors waiting on critical royalty or ISBN answers need immediate clarity. Integrating Socket.io rooms (`author:<id>`, `admin:tickets`, `ticket:<id>`) ensures that when an ops team member edits and sends an AI draft, the author’s browser reflects the response instantaneously without requiring manual page refreshes.
 
+5. **Dedicated Multi-Route Architecture & Flashing Error Codes**:
+   To prevent single-route state entanglement, the frontend leverages a strict, decoupled routing architecture powered by `react-router-dom`:
+   - `/`: Minimalist, elegant landing page tailored specifically to the Author Support & Communication Portal.
+   - `/login`: Secure, dedicated credential authentication view with access and refresh token management.
+   - `/author`: Protected Author Support & Communication Desk.
+   - `/admin`: Protected Operations Admin Desk.
+   - `*`: Dedicated 404 Catch-All error route that flashes an animated `HTTP 404: ROUTE_NOT_FOUND` error badge with return navigation.
+   - Role-Based Guards: `ProtectedRoute` intercepts unauthorized cross-role traversal (e.g. an author navigating directly to `/admin`) and flashes an `HTTP 403: ACCESS_DENIED` status code with clear guidance.
+
+6. **Brand Cohesion & Official Visual Identity**:
+   The entire application was re-themed to BookLeaf Publishing’s official coral-pink brand palette (`#eb5467`), supported by an official SVG vector logo, favicon, and a streamlined Author Support landing page without unnecessary marketing clutter.
+
 ---
 
 ### 2. Trade-Offs Made
