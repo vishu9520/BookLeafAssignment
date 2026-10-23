@@ -2,7 +2,7 @@
 
 > **Full-Stack Technical Assignment**  
 > Built for BookLeaf Publishing by **Vishu Vatsay**  
-> Live Demo: Connected to MongoDB Atlas (`cluster0.dalbiv3.mongodb.net/vishuvatsay`)  
+> Live Demo: Connected to MongoDB Atlas Cloud Database  
 > Interactive Swagger API Docs: `http://localhost:5000/api-docs`
 
 ---
@@ -81,11 +81,8 @@ The frontend uses strict client-side routing powered by `react-router-dom`:
 ### Core Technologies
 - **Backend**: Node.js, Express 4, Socket.io (WebSocket duplex communication), Mongoose 8.
 - **Frontend**: React 18, Vite 6, Tailwind CSS, Lucide Icons, Axios (with automatic refresh-token rotation interceptors).
-- **Database**: MongoDB Atlas Cluster (`cluster0.dalbiv3.mongodb.net/vishuvatsay`).
-- **AI / LLM Integration**: Multi-provider support:
-  - **Groq Cloud** (`qwen/qwen3.8-27b` / `openai/gpt-oss-120b`) for sub-second, cost-efficient inference.
-  - **Google Gemini** (`gemini-1.5-flash`).
-  - **BookLeaf Heuristic Engine** for instant offline fallback.
+- **Database**: MongoDB Atlas Cloud Cluster.
+- **AI / LLM Integration**: Powered by **Groq Cloud** (`qwen/qwen3.8-27b`) for sub-second, cost-efficient inference, with automated fallback to the internal **BookLeaf Heuristic Engine** for high availability.
 - **Authentication**: Stateless JWT Access Token (`15m` validity) + Stateful JWT Refresh Token (`7d` validity) with database verification, multi-session rotation, and automatic request queuing.
 - **API Spec**: Interactive Swagger UI at `http://localhost:5000/api-docs`.
 
@@ -135,15 +132,17 @@ npm run install:all
 *(Or navigate to `/server` and `/client` individually and run `npm install`)*
 
 ### Step 3: Configure Environment Variables
-The `.env` file is pre-configured in `server/.env` with the MongoDB Atlas cluster connection string:
+Copy `.env.example` to `server/.env` and update with your credentials:
 ```ini
 PORT=5000
-MONGODB_URI=mongodb+srv://vishuvatsay:Vatsay@cluster0.dalbiv3.mongodb.net/vishuvatsay?retryWrites=true&w=majority&appName=Cluster0
-JWT_ACCESS_SECRET=bookleaf_access_secret_super_secure_jwt_token_2026_production
-JWT_REFRESH_SECRET=bookleaf_refresh_secret_super_secure_jwt_token_2026_production
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
+JWT_ACCESS_SECRET=your_jwt_access_secret_super_secure_2026
+JWT_REFRESH_SECRET=your_jwt_refresh_secret_super_secure_2026
 JWT_ACCESS_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
-GEMINI_API_KEY=               # Optional: Insert Google Gemini API Key here
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=qwen/qwen3.8-27b
+LLM_PROVIDER=groq
 CLIENT_URL=http://localhost:5173
 NODE_ENV=development
 ```

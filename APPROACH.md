@@ -12,7 +12,7 @@
    The highest weighting in the evaluation (25%) centers on AI integration. Rather than treating an LLM as a simplistic chatbot, I prioritised **deep grounding in BookLeaf's actual operating manual**: the 80/20 net profit split, the quarterly calculation cycle, the 45-day post-quarter payout timeline, ₹1,000 rollover thresholds, free reprint guarantees for physical defects, and 24–48h stock sync SLAs. Every AI-drafted reply addresses the author by name, cites their exact book title and numerical royalty balance, owns publisher mistakes without corporate deflection, and sets a concrete 48-hour timeline with clear next steps.
 
 2. **Fault Tolerance & Graceful Degradation**:
-   In production self-publishing workflows, support operations must never halt because a third-party AI API experiences rate limiting or downtime. I architected a dual-engine AI pipeline: if the Gemini API key is unset or unreachable, the system automatically falls back to an intelligent **BookLeaf Heuristic Engine** with zero downtime. Tickets are always classified, scored for priority, and pre-drafted.
+   In production self-publishing workflows, support operations must never halt because a third-party AI API experiences rate limiting or downtime. I architected a multi-provider AI pipeline: powered by **Groq Cloud** (`qwen/qwen3.8-27b`) for ultra-low latency inference, with automatic fallback to an intelligent **BookLeaf Heuristic Engine** with zero downtime. Tickets are always classified, scored for priority, and pre-drafted.
 
 3. **Robust Security & Role Separation**:
    Authentication implements industry-standard **JWT Access Tokens (15m)** and **Stateful Refresh Tokens (7d)** with rotation and revocation. The API enforces strict Role-Based Access Control (RBAC): authors are strictly sandboxed to their own titles and tickets, and internal operational notes are scrubbed at the database query level so they are never leaked to author clients.
@@ -50,7 +50,7 @@
 1. **Author Self-Service Deflection & Instant Resolution**:
    During ticket composition, analyze author input in real time. If an author asks *"When will my Q3 royalty be paid?"*, display a live smart widget citing their exact calculated earnings and next scheduled payout date, potentially resolving up to 35% of repetitive queries before submission.
 2. **Multi-Model Orchestration & Semantic Routing**:
-   Use a lightweight model (e.g., Gemini 1.5 Flash / Claude Haiku) for categorization and priority scoring, and reserve higher-capacity models (e.g., Gemini 1.5 Pro) strictly for complex royalty reconciliation disputes.
+   Use a lightweight model (e.g., Groq Llama 3.3 70B / Qwen 3.8 27B) for instant categorization and priority scoring, and reserve higher-capacity models strictly for complex multi-quarter royalty reconciliation disputes.
 3. **Automated Multi-Channel Notifications**:
    Wire event hooks to trigger transactional emails (Resend / SendGrid) and WhatsApp updates (Twilio / Gupshup) for critical updates, ensuring authors stay informed even when not logged into the portal.
 4. **Ops Performance Analytics**:
