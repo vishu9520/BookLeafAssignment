@@ -10,8 +10,9 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Connect to server (either root or port 5000)
-    const newSocket = io('/', {
+    // Connect to server (either root or custom backend URL)
+    const socketUrl = import.meta.env.VITE_API_URL || '/';
+    const newSocket = io(socketUrl, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 5,
       reconnectionDelay: 1000
