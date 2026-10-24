@@ -10,8 +10,8 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Connect to server (either root or custom backend URL)
-    const socketUrl = import.meta.env.VITE_API_URL || '/';
+    // In dev, connect directly to backend port 5000 to avoid noisy Vite WebSocket proxy socket aborts
+    const socketUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '/');
     const newSocket = io(socketUrl, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 5,
@@ -19,21 +19,10 @@ export const SocketProvider = ({ children }) => {
     });
 
     newSocket.on('connect', () => {
-      // console.log('[Socket] Connected to server:', newSocket.id);
       setIsConnected(true);
-
-      // Join appropriate rooms based on authenticated user
-      if (user) {
-        if (user.role === 'author' && user.author_id) {
-          newSocket.emit('join:author', user.author_id);
-        } else if (user.role === 'admin') {
-          newSocket.emit('join:admin');
-        }
-      }
     });
 
     newSocket.on('disconnect', () => {
-      // console.log('[Socket] Disconnected from server');
       setIsConnected(false);
     });
 
@@ -42,7 +31,18 @@ export const SocketProvider = ({ children }) => {
     return () => {
       newSocket.disconnect();
     };
-  }, [user]);
+  }, []);
+
+  // Join appropriate rooms whenever socket is connected and user state is ready
+  useEffect(() => {
+    if (socket && isConnected && user) {
+      if (user.role === 'author' && user.author_id) {
+        socket.emit('join:author', user.author_id);
+      } else if (user.role === 'admin') {
+        socket.emit('join:admin');
+      }
+    }
+  }, [socket, isConnected, user?.role, user?.author_id]);
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>
