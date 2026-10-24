@@ -82,6 +82,18 @@ if (fs.existsSync(clientDistPath)) {
     }
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
+} else {
+  // If client/dist is not present (backend-only deployment on Render), return API service info
+  app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      service: 'BookLeaf Publishing - Author Support & Communication Portal API',
+      status: 'online',
+      ai_status: getAiStatus(),
+      documentation: '/api-docs',
+      health: '/api/health'
+    });
+  });
 }
 
 // 404 Handler for undefined routes
